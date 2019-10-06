@@ -1,0 +1,31 @@
+version: '2'
+services:
+  php7:
+    container_name: php7
+    build: ./php
+    volumes:
+      - /Users/Antonia/development/config/php:/usr/local/etc/php
+      - /Users/Antonia/development/code/myapp:/var/www/html/myapp
+    depends_on:
+      - mysql
+
+  nginx:
+    container_name: nginx
+    image: nginx:1.10.1
+    ports:
+      - 8080:80
+    volumes:
+      - /Users/Antonia/development/config/nginx:/etc/nginx/conf.d
+      - /Users/Antonia/development/code/myapp:/var/www/html/myapp
+      - /Users/Antonia/development/logs:/var/log/nginx
+    depends_on:
+      - php7
+
+  mysql:
+    container_name: mysql
+    image: mysql:5.7.14
+    volumes:
+      - /Users/Antonia/development/mysql/data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=docker_sample
